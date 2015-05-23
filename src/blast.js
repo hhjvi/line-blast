@@ -4,7 +4,7 @@ var EmptyScene = cc.Scene.extend({
   onEnter: function () {
     'use strict';
     this._super();
-    cc.director.runScene(cc.TransitionFade.create(0.5, new cc.Scene(), cc.color(255, 0, 0)));
+    cc.director.runScene(cc.TransitionFade.create(0.5, new blast.WelcomeScene(), cc.color(0, 0, 0)));
   }
 });
 
