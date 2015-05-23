@@ -1,6 +1,6 @@
 blast.WelcomeScene = cc.Scene.extend({
   enterLevels: function () {
-    blast.pushSceneAnimated(new cc.Scene());
+    blast.pushSceneAnimated(new blast.LevelListScene());
   },
   enterEndless: function () {
     blast.pushSceneAnimated(new cc.Scene());

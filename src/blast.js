@@ -23,6 +23,7 @@ window.onload = function() {
     cc.view.resizeWithBrowserSize(true);
     // resources were not large, so we just start running scenes directly
     cc.director.runScene(new EmptyScene());
+    blast.vsize = cc.director.getVisibleSize();
   };
   cc.game.run('game_canvas');
 };
