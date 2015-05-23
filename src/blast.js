@@ -4,7 +4,8 @@ var EmptyScene = cc.Scene.extend({
   onEnter: function () {
     'use strict';
     this._super();
-    cc.director.runScene(cc.TransitionFade.create(0.5, new blast.WelcomeScene(), cc.color(0, 0, 0)));
+    cc.director.runScene(
+      cc.TransitionFade.create(0.5, new blast.WelcomeScene(), res.transitionColour));
   }
 });
 
@@ -24,4 +25,33 @@ window.onload = function() {
     cc.director.runScene(new EmptyScene());
   };
   cc.game.run('game_canvas');
+};
+
+////////// SCENE-RELATED GLOBAL METHODS //////////
+blast.pushSceneAnimated = function (nextScene) {
+  var curScene = cc.director.getRunningScene();
+  var cover = new cc.LayerColor(res.transitionColour);
+  cover.setOpacity(0);
+  cover.runAction(cc.sequence(
+    cc.fadeIn(res.transitionTime / 2), cc.callFunc((function (s) { return function () {
+      cc.director.pushScene(s);
+    }; })(nextScene)),
+    cc.fadeOut(res.transitionTime / 2)  // This will be played after popping the next scene
+  ));
+  curScene.addChild(cover, 9999999);
+  cover = new cc.LayerColor(res.transitionColour);
+  cover.runAction(cc.fadeOut(res.transitionTime / 2));
+  cover.setTag(233333);
+  nextScene.addChild(cover, 9999999);
+  var backBtn = new cc.MenuItemImage(res.backBtnImage, res.backBtnImageSel, function () {
+    this.getChildByTag(233333).runAction(cc.sequence(
+      cc.fadeIn(res.transitionTime / 2),
+      cc.callFunc(function () { cc.director.popScene(); })
+    ));
+  }, nextScene);
+  backBtn.setAnchorPoint(cc.p(0, 1));
+  backBtn.setNormalizedPosition(cc.p(0, 1));
+  var menu = new cc.Menu(backBtn);
+  menu.setPosition(cc.p(0, 0));
+  nextScene.addChild(menu);
 };
