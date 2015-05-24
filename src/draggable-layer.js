@@ -67,8 +67,13 @@ var DLI_TitleFontSize = 36;
 var DLI_SubtitleFontSize = 26;
 var DLI_Height = 100;
 blast.DraggableListItem = cc.LayerColor.extend({
-  ctor: function (title, subtitle) {
+  _callback: null, _target: null, _id: -1,
+  ctor: function (id, title, subtitle, callback, target) {
     this._super(cc.color(0, 0, 0));
+    this._id = id;
+    this._callback = callback;
+    this._target = target;
+    // Show text
     this.setContentSize(cc.size(blast.vsize.width, DLI_Height));
     var titleLabel = new cc.LabelTTF(title, '', DLI_TitleFontSize);
     titleLabel.setAnchorPoint(cc.p(0, 0));
@@ -87,5 +92,6 @@ blast.DraggableListItem = cc.LayerColor.extend({
     this.runAction(cc.tintTo(0.2, 0, 0, 0));
   },
   activateClick: function () {
+    if (this._callback) this._callback.call(this._target, this._id);
   }
 });

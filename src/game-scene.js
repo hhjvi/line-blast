@@ -27,12 +27,19 @@ blast.GameScene = cc.Scene.extend({
     }
   },
   doStep: function (idx) {
-    this._track.runAction(new cc.EaseSineOut(cc.sequence(
-      cc.moveBy(0.2, this._track.step()),
-      cc.callFunc((function (x) { return function () {
-        if (++x._place >= x._route.length - 1) x.finishRoute();
-      }; })(this))
-    )));
+    var action;
+    if (++this._place >= this._route.length - 1) {
+      if (this._place >= this._route.length) return;  // Ignore invalid moves
+      action = new cc.EaseSineOut(cc.sequence(
+        cc.moveBy(0.2, this._track.step()),
+        cc.callFunc((function (x) { return function () {
+          x.finishRoute();
+        }; })(this))
+      ));
+    } else {
+      action = new cc.EaseSineOut(cc.moveBy(0.2, this._track.step()));
+    }
+    this._track.runAction(action);
     this._scoreDisp.setString(++this._score);
     this.scheduleUpdate();
   },
@@ -74,6 +81,25 @@ blast.GameScene = cc.Scene.extend({
   }
 });
 
+blast.GameScene_Level = blast.GameScene.extend({
+  _levelId: -1,
+  finishRoute: function () {
+    this.endGame('Congratulations!!');  // <-- SAO?
+  },
+  ctor: function (levelId) {
+    this._super([{row: 0, col: 0}, {row: 1, col: 0}, {row: 1, col: -1}, {row: 0, col: -1}]);
+    this._remainTime = 10;
+    this._timeDisp.setString('10.0 s');
+    this._levelId = levelId;
+    // Show the level number
+    var lvnumLabel = new cc.LabelTTF('Level ' + levelId, '', 40);
+    lvnumLabel.setAnchorPoint(cc.p(1, 1));
+    lvnumLabel.setPosition(cc.p(blast.vsize.width - 18, blast.vsize.height * 0.382));
+    this.addChild(lvnumLabel);
+    lvnumLabel.runAction(cc.sequence(cc.delayTime(1.5), cc.fadeOut(0.7), cc.removeSelf()));
+  }
+});
+
 blast.GameScene_Endless = blast.GameScene.extend({
   finishRoute: function () {
     this._remainTime += 5;
@@ -82,6 +108,6 @@ blast.GameScene_Endless = blast.GameScene.extend({
   ctor: function () {
     this._super([{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: -1}]);
     this._remainTime = 5;
-    this._timeDisp.setString('20.0 s');
+    this._timeDisp.setString('5.0 s');
   }
 });
