@@ -21,11 +21,12 @@ blast.Track = cc.DrawNode.extend({
   // http://www.phrases.org.uk/meanings/324100.html
   step: function () {
     ++this._curLoc;
-    for (var i = this._curLoc + 1; i < this._route.length; ++i){
+    this.clear();
+    for (var i = this._curLoc + 1; i < this._route.length; ++i) {
       this.drawDot(this._route[i], 10, this._blankColour);
       this.drawSegment(this._route[i - 1], this._route[i], 5, this._blankColour);
     }
-    for (var i = 1; i <= this._curLoc; ++i){
+    for (var i = 1; i <= this._curLoc; ++i) {
       this.drawDot(this._route[i], 10, this._passedColour);
       this.drawSegment(this._route[i - 1], this._route[i], 5, this._passedColour);
     }
