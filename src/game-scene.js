@@ -18,6 +18,7 @@ blast.ctrlBtn = function(idx, callback, target) {
 blast.GameScene = cc.Scene.extend({
   _routes: [], _tracks: [], _pastTracks: [], _baseTrack: null, _place: 0, _score: 0,
   _times: [],
+  _rotate: 0, _rotation: 0,
   _scoreDisp: null, _timeDisp: null,
   _remainTime: 0,
   update: function (dt) {
@@ -26,13 +27,34 @@ blast.GameScene = cc.Scene.extend({
     } else {
       this._timeDisp.setString(this._remainTime.toFixed(1) + ' s');
     }
+    this._rotate && this.actionManager.numberOfRunningActionsInTarget(this._baseTrack) === 0
+      && this._baseTrack.setRotation(this._rotation += this._rotate * dt),
+      this._baseTrack.setPosition(
+        cc.pRotateByAngle(
+          this._baseTrack.getPosition(),
+          //blast.rowcolToNodePos(this._routes[0][this._place]),
+          cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5),
+          -this._rotate * dt * Math.PI / 180.0
+      ));
   },
   doStep: function (idx) {
-    var action;
-    if (++this._place >= this._routes[0].length - 1) {
-      if (this._place >= this._routes[0].length) return;  // Ignore invalid moves
-      action = new cc.EaseSineOut(cc.sequence(
-        cc.moveBy(0.2, this._tracks[0].step()),
+    if (this._routes.length === 0 ||
+      ++this._place >= this._routes[0].length) return;  // Ignore invalid moves
+    console.log(blast.rowcolToNodePos(this._routes[0][this._place]));
+    console.log(this._rotation);
+    console.log(cc.pRotateByAngle(blast.rowcolToNodePos(this._routes[0][this._place]), cc.p(0, 0), -this._rotation * Math.PI / 180.0));
+    console.log(
+      cc.pSub(
+        cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5),
+        cc.pRotateByAngle(blast.rowcolToNodePos(this._routes[0][this._place]), cc.p(0, 0), -this._rotation * Math.PI / 180.0)));
+    this._rotate = 0; var rr = this._rotate, pp = this;
+    var action = cc.sequence(new cc.EaseSineOut(cc.moveTo(0.2, cc.pSub(
+      cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5),
+      cc.pRotateByAngle(blast.rowcolToNodePos(this._routes[0][this._place]), cc.p(0, 0), -this._rotation * Math.PI / 180.0)))),
+      cc.callFunc(function () { pp._rotate = rr; }));
+    if (this._place >= this._routes[0].length - 1) {
+      action = cc.sequence(
+        action,
         cc.callFunc((function (x) { return function () {
           // Finished a section of the route!
           x._routes.shift();
@@ -44,9 +66,13 @@ blast.GameScene = cc.Scene.extend({
             x._remainTime += x._times.shift();
           }
         }; })(this))
-      ));
+      );
     } else {
-      action = new cc.EaseSineOut(cc.moveBy(0.2, this._tracks[0].step()));
+      action = new cc.EaseSineOut(cc.moveTo(0.2, cc.pSub(
+        cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5),
+        blast.rowcolToNodePos(this._routes[0][this._place]))));
+      //action = new cc.EaseSineOut(cc.moveBy(0.2,
+      //  cc.pRotateByAngle(this._tracks[0].step(), cc.p(0, 0), -this._rotation * Math.PI / 180.0)));
     }
     this._baseTrack.runAction(action);
     this._scoreDisp.setString(++this._score);
@@ -118,10 +144,12 @@ blast.GameScene_Level = blast.GameScene.extend({
       blast.player.levelScores[this._levelId] = score;
   },
   ctor: function (levelId) {
-    this._super(blast.levelDataToRoutes(res.levels[levelId].route));
-    this._remainTime = res.levels[levelId].time[0];
-    this._times = res.levels[levelId].time.slice(1);
+    var levelData = res.levels[levelId];
+    this._super(blast.levelDataToRoutes(levelData.route));
+    this._remainTime = levelData.time[0];
+    this._times = levelData.time.slice(1);
     this._timeDisp.setString(this._remainTime + '.0 s');
+    this._rotate = levelData.rotate || false;
     this._levelId = levelId;
     // The undercover
     var uc = new cc.LayerColor(cc.color(128, 128, 48, 128));

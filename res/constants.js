@@ -55,7 +55,7 @@ res.levels = [
   // Levels 6~10: First wave of challenge
   {time: [10], route: ['LDLDLDLDLDLDLDLDLDLDLDLDLDLDLD']},
   {time: [10], route: ['URRRDRDDDLLLDLLDLDLUUUR']},
-  // Levels 11~15: A peak at the sections
+  // Levels 11~15: Smog?
   {
     time: [15, 15],
     route: ['DDDRR', 'RRUUU'],
@@ -76,6 +76,15 @@ res.levels = [
   {
     time: [15, 15],
     route: ['LUUURURRDLDDDDDRRU', 'L']
+  },
+  // Levels 21~25: A peek at the rotations
+  {
+    time: [20],
+    route: ['RRRRURRDLDDD'],
+    rotate: 10,
+    tutorial: [
+      {text: 'Well, everything\nwill be rotating...', pos: cc.p(-20, -40)}
+    ]
   }
 ];
 
