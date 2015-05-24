@@ -17,6 +17,13 @@ blast.WelcomeScene = cc.Scene.extend({
     nginLabel.setAnchorPoint(cc.p(0.5, 0));
     nginLabel.setNormalizedPosition(cc.p(0.5, 0));
     this.addChild(nginLabel);
+    // Player's name
+    var playerLabel = new cc.LabelTTF(
+      blast.player.name + '\nLevels Score: 1000 / Rank 5\nEndless Score: 888 / Rank 4', '', 18);
+    playerLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_RIGHT);
+    playerLabel.setAnchorPoint(cc.p(1, 1));
+    playerLabel.setNormalizedPosition(cc.p(1, 0.7));
+    this.addChild(playerLabel);
     // Level mode entry
     var levelLabel = new cc.LabelTTF(res.levelMode, '', 36);
     var levelBtn = new cc.MenuItemLabel(levelLabel, this.enterLevels, this);
