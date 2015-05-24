@@ -11,3 +11,5 @@ res.engineLabelColour = cc.color(128, 128, 255);
 
 res.levelMode = 'Levels';
 res.endlessMode = 'Endless';
+
+res.ctrlBtnImg = ['res/turn.png', 'res/straight.png', 'res/straight.png', 'res/turn.png'];

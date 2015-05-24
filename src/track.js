@@ -29,5 +29,6 @@ blast.Track = cc.DrawNode.extend({
       this.drawDot(this._route[i], 10, this._passedColour);
       this.drawSegment(this._route[i - 1], this._route[i], 5, this._passedColour);
     }
+    return cc.pSub(this._route[this._curLoc - 1], this._route[this._curLoc]);
   }
 });
