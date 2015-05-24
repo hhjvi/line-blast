@@ -47,7 +47,9 @@ res.levels = [
     tutorial: [
       {text: 'Want a little challenge??', pos: cc.p(0, 133)}
     ]
-  }
+  },
+  {route: ['ULLDDDRR']},
+  {route: ['ULLDDDRR']}
 ];
 
 //-- Endless Mode --//
