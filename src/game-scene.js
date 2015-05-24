@@ -117,6 +117,27 @@ blast.GameScene_Level = blast.GameScene.extend({
     lvnumLabel.setPosition(cc.p(blast.vsize.width - 18, blast.vsize.height * 0.382));
     this.addChild(lvnumLabel);
     lvnumLabel.runAction(cc.sequence(cc.delayTime(1.5), cc.fadeOut(0.7), cc.removeSelf()));
+    // Load the tutorials
+    // http://blog.sina.com.cn/s/blog_672111bd0100repo.html
+    if (res.levels[levelId].tutorial) {
+      var i = res.levels[levelId].tutorial.length;
+      do {
+        var c = res.levels[levelId].tutorial[--i];
+        var node;
+        if (c.img) {
+          // An image
+          node = new cc.Sprite(c.img);
+          node.setFlippedX(c.flipx);
+        } else if (c.text) {
+          // A text label
+          node = new cc.LabelTTF(c.text, '', c.fontsize || 24);
+        } else continue;
+        node.setScale(c.scale || 1);
+        node.setRotation(c.rotation || 0);
+        node.setPosition(c.pos);
+        this._baseTrack.addChild(node);
+      } while (i);
+    }
   }
 });
 
