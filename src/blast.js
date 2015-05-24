@@ -87,12 +87,12 @@ blast.levelDataToRoutes = function (ld) {
 // Player data
 blast.player = {
   name: 'Captain King',
-  levelCount: 6,
-  levelScores: [0, 0, 0, 0, 0, 0],
+  levelCount: 10,
+  levelScores: [0, 0, 0, 0, 0, 0, 6, 6, 5, 4, 3, 2, 1],
   endlessScore: 0
 };
 blast.leaderboard = {
-  levelScores: [12, 13, 14.5, 11, 9.7, 7.1, 7]
+  levelScores: [12, 13, 14.5, 11, 9.7, 7.1, 7, 8, 8, 8, 8, 6]
 };
 blast.levelSummary = function (levelId) {
   if (levelId === blast.player.levelCount) return 'To be challenged';

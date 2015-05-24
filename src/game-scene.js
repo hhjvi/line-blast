@@ -41,7 +41,7 @@ blast.GameScene = cc.Scene.extend({
           if (x._routes.length === 0) x.finishRoute();
           else {
             x._tracks[0].setVisible(true);
-            this._remainTime += this._times.shift();
+            x._remainTime += x._times.shift();
           }
         }; })(this))
       ));

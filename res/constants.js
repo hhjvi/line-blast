@@ -54,7 +54,29 @@ res.levels = [
   },
   // Levels 6~10: First wave of challenge
   {time: [10], route: ['LDLDLDLDLDLDLDLDLDLDLDLDLDLDLD']},
-  {time: [10], route: ['URRRDRDDDLLLDLLDLDLUUUR']}
+  {time: [10], route: ['URRRDRDDDLLLDLLDLDLUUUR']},
+  // Levels 11~15: A peak at the sections
+  {
+    time: [15, 15],
+    route: ['DDDRR', 'RRUUU'],
+    tutorial: [
+      {text: 'How does it feel\nto be near-sighted?', pos: cc.p(0, 40)}
+    ]
+  }, {
+    time: [15, 15],
+    route: ['URRRR', 'DRRRR']
+  }, {
+    time: [1, 0, 0, 15],
+    route: ['R', 'U', 'U', 'LULLLLLLUU'],
+    tutorial: [
+      {text: 'Sometimes short reflex arcs\nare required.', pos: cc.p(0, -40)}
+    ]
+  },
+  // Levels 16~20: Second wave of challenge
+  {
+    time: [15, 15],
+    route: ['LUUURURRDLDDDDDRRU', 'L']
+  }
 ];
 
 //-- Endless Mode --//
