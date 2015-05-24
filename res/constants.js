@@ -19,6 +19,7 @@ res.ctrlBtnImg = ['res/turn.png', 'res/straight.png', 'res/straight.png', 'res/t
 res.levels = [
   // Levels 1~5 with tutorials
   {
+    time: [15],
     route: ['UUUUUUU'],
     tutorial: [
       {img: 'res/straight.png', pos: cc.p(0, 100), scale: 0.55},
@@ -27,6 +28,7 @@ res.levels = [
       {text: 'Two buttons in the middle\nare for L.H. & R.H.', pos: cc.p(0, -60)}
     ]
   }, {
+    time: [15],
     route: ['UURR'],
     tutorial: [
       {img: 'res/straight.png', pos: cc.p(0, 100), scale: 0.55},
@@ -35,22 +37,24 @@ res.levels = [
       {text: 'Walk to that corner\nand turn right.', pos: cc.p(0, -50)}
     ]
   },
-  {route: ['ULLDDDRR']},
+  {time: [15], route: ['ULLDDDRR']},
   {
+    time: [15],
     route: ['RRUU'],
     tutorial: [
       {img: 'res/turn.png', pos: cc.p(200, 15), scale: 0.7, rotation: 90},
       {text: 'You don\'t always start\nfacing the top.', pos: cc.p(0, -50)}
     ]
   }, {
+    time: [15],
     route: ['LDRRUULL'],
     tutorial: [
       {text: 'Want a little challenge??', pos: cc.p(0, 133)}
     ]
   },
   // Levels 6~10: First wave of challenge
-  {route: ['ULLDDDRR']},
-  {route: ['ULLDDDRR']}
+  {time: [10], route: ['ULLDDDRR']},
+  {time: [10], route: ['ULLDDDRR']}
 ];
 
 //-- Endless Mode --//

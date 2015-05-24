@@ -17,13 +17,14 @@ blast.ctrlBtn = function(idx, callback, target) {
 
 blast.GameScene = cc.Scene.extend({
   _routes: [], _tracks: [], _pastTracks: [], _baseTrack: null, _place: 0, _score: 0,
+  _times: [],
   _scoreDisp: null, _timeDisp: null,
   _remainTime: 0,
   update: function (dt) {
     if ((this._remainTime -= dt) <= 0) {
       this.endGame('Time up!');
     } else {
-      this._timeDisp.setString(this._remainTime.toFixed(1).toString() + ' s');
+      this._timeDisp.setString(this._remainTime.toFixed(1) + ' s');
     }
   },
   doStep: function (idx) {
@@ -38,7 +39,10 @@ blast.GameScene = cc.Scene.extend({
           x._pastTracks.push(x._tracks.shift());
           x._place = 0;
           if (x._routes.length === 0) x.finishRoute();
-          else x._tracks[0].setVisible(true);
+          else {
+            x._tracks[0].setVisible(true);
+            this._remainTime += this._times.shift();
+          }
         }; })(this))
       ));
     } else {
@@ -86,7 +90,7 @@ blast.GameScene = cc.Scene.extend({
     this._tracks = [];
     this._pastTracks = [];
     for (var i in routes) {
-      var t = new blast.Track(routes[i]);;
+      var t = new blast.Track(routes[i]);
       if (i == 0) {
         this._baseTrack = t;
         t.setPosition(cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5));
@@ -115,8 +119,9 @@ blast.GameScene_Level = blast.GameScene.extend({
   },
   ctor: function (levelId) {
     this._super(blast.levelDataToRoutes(res.levels[levelId].route));
-    this._remainTime = 10;
-    this._timeDisp.setString('10.0 s');
+    this._remainTime = res.levels[levelId].time[0];
+    this._times = res.levels[levelId].time.slice(1);
+    this._timeDisp.setString(this._remainTime + '.0 s');
     this._levelId = levelId;
     // Show the level number
     var lvnumLabel = new cc.LabelTTF('Level ' + levelId, '', 40);
