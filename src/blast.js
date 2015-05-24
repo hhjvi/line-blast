@@ -28,6 +28,11 @@ window.onload = function() {
   cc.game.run('game_canvas');
 };
 
+////////// TIME-RELATED GLOBAL METHODS //////////
+blast.delayCall = function (delay, func, target) {
+  cc.director.getScheduler().schedule(func, target, delay * 99, 1, delay, !target.isRunning());
+};
+
 ////////// SCENE-RELATED GLOBAL METHODS //////////
 blast.pushSceneAnimated = function (nextScene) {
   var curScene = cc.director.getRunningScene();

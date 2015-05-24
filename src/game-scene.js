@@ -16,7 +16,7 @@ blast.ctrlBtn = function(idx, callback, target) {
 };
 
 blast.GameScene = cc.Scene.extend({
-  _track: null, _score: 0,
+  _route: [], _track: null, _place: 0, _score: 0,
   _scoreDisp: null, _timeDisp: null,
   _remainTime: 0,
   update: function (dt) {
@@ -27,9 +27,12 @@ blast.GameScene = cc.Scene.extend({
     }
   },
   doStep: function (idx) {
-    this._track.runAction(new cc.EaseSineOut(
-      cc.moveBy(0.2, this._track.step())
-    ));
+    this._track.runAction(new cc.EaseSineOut(cc.sequence(
+      cc.moveBy(0.2, this._track.step()),
+      cc.callFunc((function (x) { return function () {
+        if (++x._place >= x._route.length - 1) x.finishRoute();
+      }; })(this))
+    )));
     this._scoreDisp.setString(++this._score);
     this.scheduleUpdate();
   },
@@ -38,12 +41,10 @@ blast.GameScene = cc.Scene.extend({
     // Put the cover above everthing else but the return button & the transition cover
     this.addChild(new blast.Cover(message), 9998998);
   },
+  finishRoute: function () {
+  },
   ctor: function (route) {
     this._super();
-    // Create the track
-    this._track = new blast.Track(route);
-    this._track.setPosition(cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5));
-    this.addChild(this._track);
     // Create the control buttons
     for (var i = 0; i < 4; ++i) {
       var btn = blast.ctrlBtn(i, this.doStep, this);
@@ -60,10 +61,24 @@ blast.GameScene = cc.Scene.extend({
     this._timeDisp.setAnchorPoint(cc.p(1, 1));
     this._timeDisp.setPosition(cc.p(blast.vsize.width - 6, blast.vsize.height - 66));
     this.addChild(this._timeDisp);
+    // Create the track
+    this.initRoute(route);
+  },
+  initRoute: function (route) {
+    if (this._track) this._track.removeFromParent();
+    this._route = route;
+    this._place = 0;
+    this._track = new blast.Track(route);
+    this._track.setPosition(cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5));
+    this.addChild(this._track);
   }
 });
 
 blast.GameScene_Endless = blast.GameScene.extend({
+  finishRoute: function () {
+    this._remainTime += 5;
+    this.initRoute([{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: 1}]);
+  },
   ctor: function () {
     this._super([{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: -1}]);
     this._remainTime = 5;
