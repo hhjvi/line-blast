@@ -53,8 +53,8 @@ res.levels = [
     ]
   },
   // Levels 6~10: First wave of challenge
-  {time: [10], route: ['ULLDDDRR']},
-  {time: [10], route: ['ULLDDDRR']}
+  {time: [10], route: ['LDLDLDLDLDLDLDLDLDLDLDLDLDLDLD']},
+  {time: [10], route: ['URRRDRDDDLLLDLLDLDLUUUR']}
 ];
 
 //-- Endless Mode --//

@@ -111,10 +111,10 @@ blast.GameScene_Level = blast.GameScene.extend({
     this.endGame('Congratulations!!');  // <-- SAO?
     if (blast.player.levelCount < this._levelId + 1) {
       blast.player.levelCount = this._levelId + 1;
-      blast.player.levelScores[this._levelId] = 0;
+      blast.player.levelScores[this._levelId] = 1 << 30;
     }
     var score = 18906416;
-    if (blast.player.levelScores[this._levelId] < score)
+    if (blast.player.levelScores[this._levelId] > score)
       blast.player.levelScores[this._levelId] = score;
   },
   ctor: function (levelId) {
@@ -123,12 +123,41 @@ blast.GameScene_Level = blast.GameScene.extend({
     this._times = res.levels[levelId].time.slice(1);
     this._timeDisp.setString(this._remainTime + '.0 s');
     this._levelId = levelId;
+    // The undercover
+    var uc = new cc.LayerColor(cc.color(128, 128, 48, 128));
+    uc.setContentSize(cc.size(blast.vsize.width, blast.vsize.height * 0.4));
+    uc.setPosition(cc.p(0, 0));
+    uc.setOpacity(0);
+    this.addChild(uc, 1096);
+    uc.setCascadeOpacityEnabled(false);
+    uc.runAction(cc.sequence(
+      cc.delayTime(0.5), cc.fadeTo(0.7, 128),
+      cc.delayTime(2), cc.fadeOut(0.7), cc.removeSelf()));
     // Show the level number
-    var lvnumLabel = new cc.LabelTTF('Level ' + levelId, '', 40);
+    var lvnumLabel = new cc.LabelTTF('Level ' + levelId, '', 40);;
+    lvnumLabel.setColor(cc.color(255, 255, 64));
     lvnumLabel.setAnchorPoint(cc.p(1, 1));
     lvnumLabel.setPosition(cc.p(blast.vsize.width - 18, blast.vsize.height * 0.382));
-    this.addChild(lvnumLabel);
-    lvnumLabel.runAction(cc.sequence(cc.delayTime(1.5), cc.fadeOut(0.7), cc.removeSelf()));
+    lvnumLabel.setOpacity(0);
+    uc.addChild(lvnumLabel);
+    lvnumLabel.runAction(cc.sequence(
+      cc.delayTime(0.5), cc.fadeIn(0.7),
+      cc.delayTime(2), cc.fadeOut(0.7), cc.removeSelf()));
+    // Show the records
+    var recordStr = 'Global best: ' + blast.leaderboard.levelScores[this._levelId].toFixed(1) + ' s';
+    if (this._levelId < blast.player.levelCount) {
+      recordStr = 'Personal best: ' + blast.player.levelScores[this._levelId].toFixed(1)
+        + ' s' + '\n' + recordStr;
+    }
+    var recordLabel = new cc.LabelTTF(recordStr, '', 20);
+    recordLabel.setColor(cc.color(255, 255, 64));
+    recordLabel.setAnchorPoint(cc.p(1, 1));
+    recordLabel.setNormalizedPosition(cc.p(1, 0));
+    recordLabel.setOpacity(0);
+    lvnumLabel.addChild(recordLabel);
+    recordLabel.runAction(cc.sequence(
+      cc.delayTime(0.8), cc.fadeIn(0.7),
+      cc.delayTime(1.7), cc.fadeOut(0.7), cc.removeSelf()));
     // Load the tutorials
     // http://blog.sina.com.cn/s/blog_672111bd0100repo.html
     if (res.levels[levelId].tutorial) {

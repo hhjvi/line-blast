@@ -87,13 +87,16 @@ blast.levelDataToRoutes = function (ld) {
 // Player data
 blast.player = {
   name: 'Captain King',
-  levelCount: 0,
-  levelScores: [],
+  levelCount: 6,
+  levelScores: [0, 0, 0, 0, 0, 0],
   endlessScore: 0
+};
+blast.leaderboard = {
+  levelScores: [12, 13, 14.5, 11, 9.7, 7.1, 7]
 };
 blast.levelSummary = function (levelId) {
   if (levelId === blast.player.levelCount) return 'To be challenged';
   else return levelId > blast.player.levelCount ?
     'Locked' :
-    'Best: ' + blast.player.levelScores[levelId].toString();
+    'Best: ' + blast.player.levelScores[levelId].toFixed(1) + ' s';
 };
