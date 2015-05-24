@@ -1,6 +1,6 @@
 // The track, which displays a part of the map.
-// Currently only available to debug through the web console.
-var stepLen = 100;
+blast.stepLen = 100;
+blast.rowcolToNodePos = function (e) { return cc.p(e.row * blast.stepLen, e.col * blast.stepLen); };
 
 blast.Track = cc.DrawNode.extend({
   _blankColour: cc.color.WHITE,
@@ -8,7 +8,7 @@ blast.Track = cc.DrawNode.extend({
   _route: [], _curLoc: 0,
   ctor: function (route, blankColour, passedColour) {
     this._super();
-    this._route = route.map(function (e) { return cc.p(e.row * stepLen, e.col * stepLen); });
+    this._route = route.map(blast.rowcolToNodePos);
     blankColour && (this._blankColour = blankColour);
     passedColour && (this._passedColour = passedColour);
     for (var i = 1; i < route.length; ++i) {

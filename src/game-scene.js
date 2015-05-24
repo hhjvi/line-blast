@@ -16,7 +16,7 @@ blast.ctrlBtn = function(idx, callback, target) {
 };
 
 blast.GameScene = cc.Scene.extend({
-  _route: [], _track: null, _place: 0, _score: 0,
+  _routes: [], _tracks: [], _pastTracks: [], _baseTrack: null, _place: 0, _score: 0,
   _scoreDisp: null, _timeDisp: null,
   _remainTime: 0,
   update: function (dt) {
@@ -28,18 +28,23 @@ blast.GameScene = cc.Scene.extend({
   },
   doStep: function (idx) {
     var action;
-    if (++this._place >= this._route.length - 1) {
-      if (this._place >= this._route.length) return;  // Ignore invalid moves
+    if (++this._place >= this._routes[0].length - 1) {
+      if (this._place >= this._routes[0].length) return;  // Ignore invalid moves
       action = new cc.EaseSineOut(cc.sequence(
-        cc.moveBy(0.2, this._track.step()),
+        cc.moveBy(0.2, this._tracks[0].step()),
         cc.callFunc((function (x) { return function () {
-          x.finishRoute();
+          // Finished a section of the route!
+          x._routes.shift();
+          x._pastTracks.push(x._tracks.shift());
+          x._place = 0;
+          if (x._routes.length === 0) x.finishRoute();
+          else x._tracks[0].setVisible(true);
         }; })(this))
       ));
     } else {
-      action = new cc.EaseSineOut(cc.moveBy(0.2, this._track.step()));
+      action = new cc.EaseSineOut(cc.moveBy(0.2, this._tracks[0].step()));
     }
-    this._track.runAction(action);
+    this._baseTrack.runAction(action);
     this._scoreDisp.setString(++this._score);
     this.scheduleUpdate();
   },
@@ -50,7 +55,7 @@ blast.GameScene = cc.Scene.extend({
   },
   finishRoute: function () {
   },
-  ctor: function (route) {
+  ctor: function (routes) {
     this._super();
     // Create the control buttons
     for (var i = 0; i < 4; ++i) {
@@ -69,15 +74,30 @@ blast.GameScene = cc.Scene.extend({
     this._timeDisp.setPosition(cc.p(blast.vsize.width - 6, blast.vsize.height - 66));
     this.addChild(this._timeDisp);
     // Create the track
-    this.initRoute(route);
+    this.initRoutes(routes);
   },
-  initRoute: function (route) {
-    if (this._track) this._track.removeFromParent();
-    this._route = route;
+  initRoutes: function (routes) {
+    if (this._tracks.length >= 0)
+      for (var i in this._tracks) this._tracks[i].removeFromParent();
+    if (this._pastTracks.length >= 0)
+      for (var i in this._pastTracks) this._pastTracks[i].removeFromParent();
+    this._routes = routes;
     this._place = 0;
-    this._track = new blast.Track(route);
-    this._track.setPosition(cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5));
-    this.addChild(this._track);
+    this._tracks = [];
+    this._pastTracks = [];
+    for (var i in routes) {
+      var t = new blast.Track(routes[i]);;
+      if (i == 0) {
+        this._baseTrack = t;
+        t.setPosition(cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5));
+        this.addChild(t);
+      } else {
+        t.setVisible(false);
+        t.setPosition(cc.p(0, 0));
+        this._baseTrack.addChild(t);
+      }
+      this._tracks.push(t);
+    }
   }
 });
 
@@ -87,7 +107,10 @@ blast.GameScene_Level = blast.GameScene.extend({
     this.endGame('Congratulations!!');  // <-- SAO?
   },
   ctor: function (levelId) {
-    this._super([{row: 0, col: 0}, {row: 1, col: 0}, {row: 1, col: -1}, {row: 0, col: -1}]);
+    this._super([
+      [{row: 0, col: 0}, {row: 1, col: 0}, {row: 1, col: -1}, {row: 0, col: -1}],
+      [{row: 0, col: -1}, {row: 0, col: -2}, {row: -1, col: -2}]
+    ]);
     this._remainTime = 10;
     this._timeDisp.setString('10.0 s');
     this._levelId = levelId;
@@ -103,10 +126,10 @@ blast.GameScene_Level = blast.GameScene.extend({
 blast.GameScene_Endless = blast.GameScene.extend({
   finishRoute: function () {
     this._remainTime += 5;
-    this.initRoute([{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: 1}]);
+    this.initRoutes([[{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: 1}]]);
   },
   ctor: function () {
-    this._super([{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: -1}]);
+    this._super([[{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: -1}]]);
     this._remainTime = 5;
     this._timeDisp.setString('5.0 s');
   }
