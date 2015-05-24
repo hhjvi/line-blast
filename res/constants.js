@@ -48,6 +48,7 @@ res.levels = [
       {text: 'Want a little challenge??', pos: cc.p(0, 133)}
     ]
   },
+  // Levels 6~10: First wave of challenge
   {route: ['ULLDDDRR']},
   {route: ['ULLDDDRR']}
 ];

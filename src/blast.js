@@ -34,7 +34,7 @@ blast.delayCall = function (delay, func, target) {
 };
 
 ////////// SCENE-RELATED GLOBAL METHODS //////////
-blast.pushSceneAnimated = function (nextScene) {
+blast.pushSceneAnimated = function (nextScene, callback) {
   var curScene = cc.director.getRunningScene();
   var cover = new cc.LayerColor(res.transitionColour);
   cover.setOpacity(0);
@@ -42,6 +42,8 @@ blast.pushSceneAnimated = function (nextScene) {
     cc.fadeIn(res.transitionTime / 2), cc.callFunc((function (s) { return function () {
       cc.director.pushScene(s);
     }; })(nextScene)),
+    cc.delayTime(0.05),
+    cc.callFunc(callback || function () {}),
     cc.fadeOut(res.transitionTime / 2)  // This will be played after popping the next scene
   ));
   curScene.addChild(cover, 9999999);
@@ -80,4 +82,18 @@ blast.levelDataToRoutes = function (ld) {
     lastRow = r, lastCol = c;
     return ret;
   });
+};
+
+// Player data
+blast.player = {
+  name: 'Captain King',
+  levelCount: 0,
+  levelScores: [],
+  endlessScore: 0
+};
+blast.levelSummary = function (levelId) {
+  if (levelId === blast.player.levelCount) return 'To be challenged';
+  else return levelId > blast.player.levelCount ?
+    'Locked' :
+    'Best: ' + blast.player.levelScores[levelId].toString();
 };

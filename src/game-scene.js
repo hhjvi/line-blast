@@ -105,6 +105,13 @@ blast.GameScene_Level = blast.GameScene.extend({
   _levelId: -1,
   finishRoute: function () {
     this.endGame('Congratulations!!');  // <-- SAO?
+    if (blast.player.levelCount < this._levelId + 1) {
+      blast.player.levelCount = this._levelId + 1;
+      blast.player.levelScores[this._levelId] = 0;
+    }
+    var score = 18906416;
+    if (blast.player.levelScores[this._levelId] < score)
+      blast.player.levelScores[this._levelId] = score;
   },
   ctor: function (levelId) {
     this._super(blast.levelDataToRoutes(res.levels[levelId].route));
