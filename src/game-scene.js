@@ -16,11 +16,18 @@ blast.ctrlBtn = function(idx, callback, target) {
 };
 
 blast.GameScene = cc.Scene.extend({
-  _track: null,
+  _track: null, _score: 0,
+  _scoreDisp: null, _timeDisp: null,
+  _remainTime: 0,
+  update: function (dt) {
+    this._timeDisp.setString((this._remainTime -= dt).toFixed(1).toString() + ' s');
+  },
   doStep: function (idx) {
     this._track.runAction(new cc.EaseSineOut(
       cc.moveBy(0.2, this._track.step())
     ));
+    this._scoreDisp.setString(++this._score);
+    this.scheduleUpdate();
   },
   ctor: function (route) {
     this._super();
@@ -33,11 +40,24 @@ blast.GameScene = cc.Scene.extend({
       var btn = blast.ctrlBtn(i, this.doStep, this);
       this.addChild(btn);
     }
+    // Labels
+    this._scoreDisp = new cc.LabelTTF('0', '', 54);
+    this._scoreDisp.setColor(cc.color(0, 128, 255));
+    this._scoreDisp.setAnchorPoint(cc.p(1, 1));
+    this._scoreDisp.setPosition(cc.p(blast.vsize.width - 6, blast.vsize.height - 6));
+    this.addChild(this._scoreDisp);
+    this._timeDisp = new cc.LabelTTF('0.0 s', '', 40);
+    this._timeDisp.setColor(cc.color(64, 255, 64));
+    this._timeDisp.setAnchorPoint(cc.p(1, 1));
+    this._timeDisp.setPosition(cc.p(blast.vsize.width - 6, blast.vsize.height - 66));
+    this.addChild(this._timeDisp);
   }
 });
 
 blast.GameScene_Endless = blast.GameScene.extend({
   ctor: function () {
     this._super([{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: -1}]);
+    this._remainTime = 20;
+    this._timeDisp.setString('20.0 s');
   }
 });
