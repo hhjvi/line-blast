@@ -61,3 +61,23 @@ blast.pushSceneAnimated = function (nextScene) {
   menu.setPosition(cc.p(0, 0));
   nextScene.addChild(menu, 9999998);
 };
+
+////////// DATA-RELATED GLOBAL CONSTANTS & METHODS //////////
+blast.dirMap = {'U': 0, 'R': 1, 'D': 2, 'L': 3};
+blast.rowInc = [1, 0, -1, 0];
+blast.colInc = [0, 1, 0, -1];
+blast.levelDataToRoutes = function (ld) {
+  var lastRow = 0, lastCol = 0;
+  return ld.map(function (str) {
+    var r = lastRow, c = lastCol, d, ret = [{row: r, col: c}];
+    for (var i = 0; i < str.length; ++i) {
+      d = blast.dirMap[str.charAt(i)];
+      ret.push({
+        row: r += blast.rowInc[d],
+        col: c += blast.colInc[d]
+      });
+    }
+    lastRow = r, lastCol = c;
+    return ret;
+  });
+};

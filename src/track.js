@@ -1,6 +1,6 @@
 // The track, which displays a part of the map.
 blast.stepLen = 100;
-blast.rowcolToNodePos = function (e) { return cc.p(e.row * blast.stepLen, e.col * blast.stepLen); };
+blast.rowcolToNodePos = function (e) { return cc.p(e.col * blast.stepLen, e.row * blast.stepLen); };
 
 blast.Track = cc.DrawNode.extend({
   _blankColour: cc.color.WHITE,

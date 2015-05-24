@@ -16,4 +16,12 @@ res.ctrlBtnImg = ['res/turn.png', 'res/straight.png', 'res/straight.png', 'res/t
 
 ////////// LEVELS //////////
 //-- Level Mode --//
+res.levels = [
+  // Levels 1~3 with tutorials
+  {route: ['UURR']},
+  {route: ['ULLDDDRR']},
+  {route: ['RRUU']},
+  {route: ['LDRRUULL']}
+];
+
 //-- Endless Mode --//
