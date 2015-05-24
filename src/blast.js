@@ -54,5 +54,5 @@ blast.pushSceneAnimated = function (nextScene) {
   backBtn.setNormalizedPosition(cc.p(0, 1));
   var menu = new cc.Menu(backBtn);
   menu.setPosition(cc.p(0, 0));
-  nextScene.addChild(menu);
+  nextScene.addChild(menu, 9999998);
 };

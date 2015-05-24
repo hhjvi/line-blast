@@ -20,7 +20,11 @@ blast.GameScene = cc.Scene.extend({
   _scoreDisp: null, _timeDisp: null,
   _remainTime: 0,
   update: function (dt) {
-    this._timeDisp.setString((this._remainTime -= dt).toFixed(1).toString() + ' s');
+    if ((this._remainTime -= dt) <= 0) {
+      this.endGame('Time up!');
+    } else {
+      this._timeDisp.setString(this._remainTime.toFixed(1).toString() + ' s');
+    }
   },
   doStep: function (idx) {
     this._track.runAction(new cc.EaseSineOut(
@@ -28,6 +32,11 @@ blast.GameScene = cc.Scene.extend({
     ));
     this._scoreDisp.setString(++this._score);
     this.scheduleUpdate();
+  },
+  endGame: function (message) {
+    this.unscheduleUpdate();
+    // Put the cover above everthing else but the return button & the transition cover
+    this.addChild(new blast.Cover(message), 9998998);
   },
   ctor: function (route) {
     this._super();
@@ -57,7 +66,7 @@ blast.GameScene = cc.Scene.extend({
 blast.GameScene_Endless = blast.GameScene.extend({
   ctor: function () {
     this._super([{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: -1}]);
-    this._remainTime = 20;
+    this._remainTime = 5;
     this._timeDisp.setString('20.0 s');
   }
 });
