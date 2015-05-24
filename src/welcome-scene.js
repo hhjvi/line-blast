@@ -3,7 +3,7 @@ blast.WelcomeScene = cc.Scene.extend({
     blast.pushSceneAnimated(new blast.LevelListScene());
   },
   enterEndless: function () {
-    blast.pushSceneAnimated(new cc.Scene());
+    blast.pushSceneAnimated(new blast.GameScene_Endless());
   },
   ctor: function () {
     this._super();
