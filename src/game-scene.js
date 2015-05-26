@@ -97,7 +97,7 @@ blast.GameScene = cc.Scene.extend({
     this._timeDisp.setPosition(cc.p(blast.vsize.width - 6, blast.vsize.height - 66));
     this.addChild(this._timeDisp);
     // Create the track
-    this.initRoutes(routes);
+    if (routes) this.initRoutes(routes);
   },
   initRoutes: function (routes) {
     if (this._tracks.length >= 0)
@@ -203,13 +203,17 @@ blast.GameScene_Level = blast.GameScene.extend({
 });
 
 blast.GameScene_Endless = blast.GameScene.extend({
+  _wave: 0,
   finishRoute: function () {
-    this._remainTime += 5;
-    this.initRoutes([[{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: 1}]]);
+    var waveData = res.challenges[this._wave++];
+    this._remainTime = waveData.time[0];
+    this._times = waveData.time.slice(1);
+    this._timeDisp.setString(this._remainTime.toString() + '.0 s');
+    this.initRoutes(blast.randomRoutes(waveData.length));
   },
   ctor: function () {
-    this._super([[{row: 0, col: 0}, {row: 1, col: 0}, {row: 2, col: 0}, {row: 2, col: -1}]]);
-    this._remainTime = 5;
-    this._timeDisp.setString('5.0 s');
+    this._super();
+    this._remainTime = 0;
+    this.finishRoute();
   }
 });
