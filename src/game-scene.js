@@ -18,7 +18,7 @@ blast.ctrlBtn = function(idx, callback, target) {
 blast.GameScene = cc.Scene.extend({
   _routes: [], _tracks: [], _pastTracks: [], _baseTrack: null, _place: 0, _score: 0,
   _times: [],
-  _rotate: 0, _rotation: 0,
+  _rotate: false, _rotation: 0,
   _scoreDisp: null, _timeDisp: null,
   _remainTime: 0,
   update: function (dt) {
@@ -27,33 +27,31 @@ blast.GameScene = cc.Scene.extend({
     } else {
       this._timeDisp.setString(this._remainTime.toFixed(1) + ' s');
     }
-    this._rotate && this.actionManager.numberOfRunningActionsInTarget(this._baseTrack) === 0
-      && this._baseTrack.setRotation(this._rotation += this._rotate * dt),
-      this._baseTrack.setPosition(
+    if (this._rotate &&
+        this.actionManager.numberOfRunningActionsInTarget(this._baseTrack) === 0) {
+      var angle = this._rotation += this._rotate * dt;
+      this._baseTrack.setRotation(angle);
+      this._baseTrack.setPosition(cc.pSub(
+        cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5),
         cc.pRotateByAngle(
-          this._baseTrack.getPosition(),
-          //blast.rowcolToNodePos(this._routes[0][this._place]),
-          cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5),
-          -this._rotate * dt * Math.PI / 180.0
+          blast.rowcolToNodePos(this._routes[0][this._place]),
+          cc.p(0, 0), -angle / 180.0 * Math.PI
+        )
       ));
+    }
   },
   doStep: function (idx) {
-    if (this._routes.length === 0 ||
-      ++this._place >= this._routes[0].length) return;  // Ignore invalid moves
-    console.log(blast.rowcolToNodePos(this._routes[0][this._place]));
-    console.log(this._rotation);
-    console.log(cc.pRotateByAngle(blast.rowcolToNodePos(this._routes[0][this._place]), cc.p(0, 0), -this._rotation * Math.PI / 180.0));
-    console.log(
-      cc.pSub(
-        cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5),
-        cc.pRotateByAngle(blast.rowcolToNodePos(this._routes[0][this._place]), cc.p(0, 0), -this._rotation * Math.PI / 180.0)));
-    this._rotate = 0; var rr = this._rotate, pp = this;
-    var action = cc.sequence(new cc.EaseSineOut(cc.moveTo(0.2, cc.pSub(
+    if (++this._place >= this._routes[0].length) return;  // Ignore invalid moves
+    this._tracks[0].step();
+    var action = new cc.EaseSineOut(cc.moveTo(0.2, cc.pSub(
       cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5),
-      cc.pRotateByAngle(blast.rowcolToNodePos(this._routes[0][this._place]), cc.p(0, 0), -this._rotation * Math.PI / 180.0)))),
-      cc.callFunc(function () { pp._rotate = rr; }));
+      cc.pRotateByAngle(
+        blast.rowcolToNodePos(this._routes[0][this._place]),
+        cc.p(0, 0), -this._rotation / 180.0 * Math.PI
+      )
+    )));
     if (this._place >= this._routes[0].length - 1) {
-      action = cc.sequence(
+      action = new cc.EaseSineOut(cc.sequence(
         action,
         cc.callFunc((function (x) { return function () {
           // Finished a section of the route!
@@ -66,13 +64,7 @@ blast.GameScene = cc.Scene.extend({
             x._remainTime += x._times.shift();
           }
         }; })(this))
-      );
-    } else {
-      action = new cc.EaseSineOut(cc.moveTo(0.2, cc.pSub(
-        cc.p(blast.vsize.width * 0.5, blast.vsize.height * 0.5),
-        blast.rowcolToNodePos(this._routes[0][this._place]))));
-      //action = new cc.EaseSineOut(cc.moveBy(0.2,
-      //  cc.pRotateByAngle(this._tracks[0].step(), cc.p(0, 0), -this._rotation * Math.PI / 180.0)));
+      ));
     }
     this._baseTrack.runAction(action);
     this._scoreDisp.setString(++this._score);
@@ -85,8 +77,9 @@ blast.GameScene = cc.Scene.extend({
   },
   finishRoute: function () {
   },
-  ctor: function (routes) {
+  ctor: function (routes, rotate) {
     this._super();
+    if (rotate) this._rotate = rotate;
     // Create the control buttons
     for (var i = 0; i < 4; ++i) {
       var btn = blast.ctrlBtn(i, this.doStep, this);
@@ -145,11 +138,10 @@ blast.GameScene_Level = blast.GameScene.extend({
   },
   ctor: function (levelId) {
     var levelData = res.levels[levelId];
-    this._super(blast.levelDataToRoutes(levelData.route));
+    this._super(blast.levelDataToRoutes(levelData.route), levelData.rotate);
     this._remainTime = levelData.time[0];
     this._times = levelData.time.slice(1);
     this._timeDisp.setString(this._remainTime + '.0 s');
-    this._rotate = levelData.rotate || false;
     this._levelId = levelId;
     // The undercover
     var uc = new cc.LayerColor(cc.color(128, 128, 48, 128));
