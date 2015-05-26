@@ -55,7 +55,7 @@ res.levels = [
   // Levels 6~10: First wave of challenge
   {time: [10], route: ['LDLDLDLDLDLDLDLDLDLDLDLDLDLDLD']},
   {time: [10], route: ['URRRDRDDDLLLDLLDLDLUUUR']},
-  // Levels 11~15: Smog?
+  // Levels 11~15: A peak at the sections
   {
     time: [15, 15],
     route: ['DDDRR', 'RRUUU'],
@@ -89,3 +89,11 @@ res.levels = [
 ];
 
 //-- Endless Mode --//
+res.challenges = [
+  // Waves 1~5 Hungry, foolish
+  {time: [15], length: [8, 4]},
+  {time: [15], length: [14]},
+  {time: [15], length: [18]},
+  {time: [15], length: [22]},
+  {time: [15], length: [26]}
+];
