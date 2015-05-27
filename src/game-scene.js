@@ -86,12 +86,12 @@ blast.GameScene = cc.Scene.extend({
       this.addChild(btn);
     }
     // Labels
-    this._scoreDisp = new cc.LabelTTF('0', '', 54);
+    this._scoreDisp = new cc.LabelTTF('0', res.fontFamily, 54);
     this._scoreDisp.setColor(cc.color(0, 128, 255));
     this._scoreDisp.setAnchorPoint(cc.p(1, 1));
     this._scoreDisp.setPosition(cc.p(blast.vsize.width - 6, blast.vsize.height - 6));
     this.addChild(this._scoreDisp);
-    this._timeDisp = new cc.LabelTTF('0.0 s', '', 40);
+    this._timeDisp = new cc.LabelTTF('0.0 s', res.fontFamily, 40);
     this._timeDisp.setColor(cc.color(64, 255, 64));
     this._timeDisp.setAnchorPoint(cc.p(1, 1));
     this._timeDisp.setPosition(cc.p(blast.vsize.width - 6, blast.vsize.height - 66));
@@ -154,7 +154,7 @@ blast.GameScene_Level = blast.GameScene.extend({
       cc.delayTime(0.5), cc.fadeTo(0.7, 128),
       cc.delayTime(2), cc.fadeOut(0.7), cc.removeSelf()));
     // Show the level number
-    var lvnumLabel = new cc.LabelTTF('Level ' + levelId, '', 40);;
+    var lvnumLabel = new cc.LabelTTF('Level ' + levelId, res.fontFamily, 40);
     lvnumLabel.setColor(cc.color(255, 255, 64));
     lvnumLabel.setAnchorPoint(cc.p(1, 1));
     lvnumLabel.setPosition(cc.p(blast.vsize.width - 18, blast.vsize.height * 0.382));
@@ -169,7 +169,7 @@ blast.GameScene_Level = blast.GameScene.extend({
       recordStr = 'Personal best: ' + blast.player.levelScores[this._levelId].toFixed(1)
         + ' s' + '\n' + recordStr;
     }
-    var recordLabel = new cc.LabelTTF(recordStr, '', 20);
+    var recordLabel = new cc.LabelTTF(recordStr, res.fontFamily, 20);
     recordLabel.setColor(cc.color(255, 255, 64));
     recordLabel.setAnchorPoint(cc.p(1, 1));
     recordLabel.setNormalizedPosition(cc.p(1, 0));
@@ -191,7 +191,7 @@ blast.GameScene_Level = blast.GameScene.extend({
           node.setFlippedX(c.flipx);
         } else if (c.text) {
           // A text label
-          node = new cc.LabelTTF(c.text, '', c.fontsize || 24);
+          node = new cc.LabelTTF(c.text, res.fontFamily, c.fontsize || 24);
         } else continue;
         node.setScale(c.scale || 1);
         node.setRotation(c.rotation || 0);

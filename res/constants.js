@@ -1,6 +1,8 @@
 var res = res || {};
 var cc = cc || {};
 
+res.fontFamily = 'Fira Sans';
+
 res.transitionTime = 1;
 res.transitionColour = cc.color(0, 0, 0);
 res.backBtnImage = 'res/back.png';

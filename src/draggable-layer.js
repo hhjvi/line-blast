@@ -76,12 +76,12 @@ blast.DraggableListItem = cc.LayerColor.extend({
     this._target = target;
     // Show text
     this.setContentSize(cc.size(blast.vsize.width, DLI_Height));
-    var titleLabel = new cc.LabelTTF(title, '', DLI_TitleFontSize);
+    var titleLabel = new cc.LabelTTF(title, res.fontFamily, DLI_TitleFontSize);
     titleLabel.setAnchorPoint(cc.p(0, 0));
     titleLabel.setPosition(cc.p(6, DLI_SubtitleFontSize + 12));
     this.addChild(titleLabel);
     this._titleLabel = titleLabel;
-    var subtitleLabel = new cc.LabelTTF(subtitle, '', DLI_SubtitleFontSize);
+    var subtitleLabel = new cc.LabelTTF(subtitle, res.fontFamily, DLI_SubtitleFontSize);
     subtitleLabel.setAnchorPoint(cc.p(0, 0));
     subtitleLabel.setPosition(cc.p(6, 6));
     this.addChild(subtitleLabel);
