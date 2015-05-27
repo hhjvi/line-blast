@@ -38,7 +38,8 @@ if ($op == 1) { // Register
   $players[$newid] = $name;
   $emails[$newid] = $email;
   $levelscr[$newid] = array();
-  for ($j = 0; $j < $levelct; $j++) $levelscr[$newid][$j] = 998998;
+  $levelscr[$newid][0] = 0;
+  for ($j = 1; $j < $levelct; $j++) $levelscr[$newid][$j] = 998998;
 } else if ($op == 2) {  // Log in
   fprintf($flog, 'LOGIN %d', $_GET['id']);
 } else if ($op == 3 || $op == 4) {  // Level game
