@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>Line Blast!</title>
+  <script type='text/javascript' src='cocos2d-js-v3.6.js'></script>
+  <script type='text/javascript' src='res/constants.js'></script>
+  <script type='text/javascript' src='src/blast.js'></script>
+  <script type='text/javascript' src='src/randomizer.js'></script>
+  <script type='text/javascript' src='src/draggable-layer.js'></script>
+  <script type='text/javascript' src='src/track.js'></script>
+  <script type='text/javascript' src='src/cover.js'></script>
+  <script type='text/javascript' src='src/welcome-scene.js'></script>
+  <script type='text/javascript' src='src/game-scene.js'></script>
+  <script type='text/javascript' src='src/level-list-scene.js'></script>
+  <script type='text/javascript' src='src/leaderboard.js'></script>
+  <link type='text/css' rel='stylesheet' href='http://fonts.lug.ustc.edu.cn/css?family=Fira+Sans:400'>
+</head>
+<body>
+  <canvas id='game_canvas' height='0'></canvas>
+  <div id='loading_text'>Loading...</div>
+  <div id='login_area' style='font-family: Fira Sans' display='none'>
+    <h2>登录/注册(直接填写即可注册)</h2><hr>
+    <input id='ipt_name' type='text' placeholder='登录名'><br>
+    <input id='ipt_email' type='text' placeholder='E-mail' style='display: none'><br><br>
+    <button type='button' onclick='login()'>Go!</button>
+  </div>
+
+  <script type='text/javascript' src='src/preload.js'></script>
+</body>
+</html>

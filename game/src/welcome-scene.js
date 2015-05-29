@@ -1,0 +1,40 @@
+blast.WelcomeScene = cc.Scene.extend({
+  enterLevels: function () {
+    blast.pushSceneAnimated(new blast.LevelListScene());
+  },
+  enterEndless: function () {
+    blast.pushSceneAnimated(new blast.LeaderboardScene());
+  },
+  ctor: function () {
+    this._super();
+    // The title
+    var titleLabel = new cc.LabelTTF('Line Blast!', res.fontFamily, 58);
+    titleLabel.setNormalizedPosition(cc.p(0.5, 0.8));
+    this.addChild(titleLabel);
+    // Acknowledgement
+    var nginLabel = new cc.LabelTTF(res.engineAck, res.fontFamily, 20);
+    nginLabel.setColor(res.engineLabelColour);
+    nginLabel.setAnchorPoint(cc.p(0.5, 0));
+    nginLabel.setNormalizedPosition(cc.p(0.5, 0));
+    this.addChild(nginLabel);
+    // Player's name
+    var playerLabel = new cc.LabelTTF(
+      blast.curPlayer.name, res.fontFamily, 18);
+    playerLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_RIGHT);
+    playerLabel.setAnchorPoint(cc.p(1, 1));
+    playerLabel.setNormalizedPosition(cc.p(1, 0.7));
+    this.addChild(playerLabel);
+    // Level mode entry
+    var levelLabel = new cc.LabelTTF(res.levelMode, res.fontFamily, 36);
+    var levelBtn = new cc.MenuItemLabel(levelLabel, this.enterLevels, this);
+    levelBtn.setNormalizedPosition(cc.p(0.5, 0.4));
+    // Endless mode entry
+    var endlessLabel = new cc.LabelTTF(res.endlessMode, res.fontFamily, 36);
+    var endlessBtn = new cc.MenuItemLabel(endlessLabel, this.enterEndless, this);
+    endlessBtn.setNormalizedPosition(cc.p(0.5, 0.25));
+    endlessLabel.setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);
+    var menu = new cc.Menu(levelBtn, endlessBtn);
+    menu.setPosition(cc.p(0, 0));
+    this.addChild(menu);
+  }
+});
