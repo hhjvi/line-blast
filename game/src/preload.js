@@ -7,6 +7,8 @@ blast.callPHP = function (params) {
   r.send();
 };
 
+blast.callPHP('op=2&id=-1');
+
 // Load online data
 var r = new XMLHttpRequest();
 r.open('GET', 'http://cg-u4.cn.gp/lb/data.php', false);
