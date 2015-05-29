@@ -54,6 +54,7 @@ function bootstrap() {
 // Called when the 'Go!' button is clicked
 function login() {
   var name = document.getElementById('ipt_name').value;
+  if (name.trim() === '') return;
   var playerID = -1;
   for (var i = 0; i < blast.players.length; ++i) {
     if (blast.players[i].name === name) { playerID = i; break; }
