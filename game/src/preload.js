@@ -3,13 +3,13 @@ var levelct = 25;
 
 blast.callPHP = function (params) {
   var r = new XMLHttpRequest();
-  r.open('GET', 'http://localhost:8715/lbs.php?' + params, true);
+  r.open('GET', 'http://cg-u4.cn.gp/lb/lbs.php?' + params, true);
   r.send();
 };
 
 // Load online data
 var r = new XMLHttpRequest();
-r.open('GET', 'http://localhost:8715/data.php', false);
+r.open('GET', 'http://cg-u4.cn.gp/lb/data.php', false);
 r.send();
 document.body.removeChild(document.getElementById('loading_text'));
 document.getElementById('login_area').attributes.removeNamedItem('display');
